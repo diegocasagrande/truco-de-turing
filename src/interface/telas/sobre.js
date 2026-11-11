@@ -37,6 +37,8 @@ export function abrirSobre() {
       '<li><b>Francisco Lima</b>: NeuroDeck (regras, motor, oponentes e mods).</li>' +
       '<li><b>Welyngton José Vinicius Dal Prá</b>: Truco de Turing (interface, arte, sons, conquistas e modo truco).</li>' +
       '<li><b>Diego Casagrande</b>: testes, validação das regras e fusão dos dois jogos.</li>' +
+      '<li><b>Vinícius Chiconato</b>: correções da fusão.</li>' +
+      '<li><b>Suzy Arcanjo</b>: verbetes das ações na Biblioteca de conceitos.</li>' +
       '</ul>' +
       '<p class="contribuicoes">Contribuições são bem-vindas: o código está aberto no repositório.</p>' +
       '<h3>Créditos e licença</h3>' +

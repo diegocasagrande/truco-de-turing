@@ -98,7 +98,7 @@ export const metodosDeTurnos = {
       ...(this.online ? { semente: this.sementeDaMao() } : {}),
     });
     this.quemVe = this.online ? this.cadeiraOnline() : 0;
-    this.inicioDosBotsEnviado = false;
+    this.inicioDosBotsEnviado = new Set();
     this.criarNeuronios();
     this.painel.inspecao.setTexture('terreno-' + this.opcoes.terreno);
     ajustarBloco(this.painel.notaInspecao, 'Passe o cursor ou toque numa carta para inspecioná-la.', 12, PAINEL_ESQ.l - 30, 40, 9.5);
@@ -247,6 +247,10 @@ export const metodosDeTurnos = {
    */
   vezDoOponente() {
     const mao = this.mao, vez = mao.vez, perfil = mao.jogadores[vez].oponente;
+    /* uma decisão por vez: chamadas repetidas para a mesma vez (online, quando alguém cai) não jogam duas vezes */
+    const chave = mao.turno + ':' + vez + ':' + mao.registro.length;
+    if (this.oponenteDecidindo === chave) return;
+    this.oponenteDecidindo = chave;
     this.ocupada = true;
     this.notaDoOponente = perfil === 'montecarlo' ? 'simulando partidas…' : 'pensando…';
     this.redesenhar();
@@ -255,7 +259,7 @@ export const metodosDeTurnos = {
       this.notaDoOponente = null;
       if (this.trucoConsideradoNoTurno !== mao.turno && podeTrucar(this.partida, vez)) {
         this.trucoConsideradoNoTurno = mao.turno;
-        if (querTrucar(mao, vez, perfil)) return this.anunciarTruco(vez);
+        if (querTrucar(mao, vez, perfil)) { this.oponenteDecidindo = null; return this.anunciarTruco(vez); }
       }
       const jogada = escolherJogada(mao, vez);
       if (jogada.simulacao) {

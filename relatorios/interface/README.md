@@ -1,13 +1,13 @@
 # Testes de interface
 
-**Versão 1.2.0** · commit `68acb37-dirty` (com as mudanças ainda não registradas) · 10/11/2026, 20:53 (horário de Brasília)  
+**Versão 1.2.0** · commit `8ddde7f-dirty` (com as mudanças ainda não registradas) · 10/11/2026, 23:42 (horário de Brasília)  
 Ambiente: Node v22.23.4 · Chromium 153.0.8010.12 · Linux x64 · 2 núcleos
 
 O jogo inteiro rodando no Chromium (Playwright): menu e telas (regras, ajuda das ações, Biblioteca, avatares), mãos completas contra os três oponentes, entre duas pessoas e em mesas de 3 a 5 jogadores, cada ação da mesa e os painéis de leitura, truco, modo dicas (mouse e toque), som, música, comemorações e celular (vertical e horizontal).
 
 | Testes | Aprovados | Reprovados | Pulados | Duração |
 |---:|---:|---:|---:|---:|
-| 19 | 19 | 0 | 0 | 671,8 s |
+| 23 | 23 | 0 | 0 | 1240,3 s |
 
 Resultado em formato JUnit (para ferramentas de CI): [`resultado.junit.xml`](resultado.junit.xml).
 
@@ -50,38 +50,49 @@ Tiradas pelo próprio teste, no momento indicado pelo nome.
 <a href="capturas/27-ajuda-das-acoes.jpg"><img src="capturas/27-ajuda-das-acoes.jpg" width="300" alt="27-ajuda-das-acoes"></a>
 <a href="capturas/28-biblioteca-dropout.jpg"><img src="capturas/28-biblioteca-dropout.jpg" width="300" alt="28-biblioteca-dropout"></a>
 <a href="capturas/29-avatares.jpg"><img src="capturas/29-avatares.jpg" width="300" alt="29-avatares"></a>
+<a href="capturas/30-sala-online.jpg"><img src="capturas/30-sala-online.jpg" width="300" alt="30-sala-online"></a>
+<a href="capturas/31-online-resultado.jpg"><img src="capturas/31-online-resultado.jpg" width="300" alt="31-online-resultado"></a>
 
 ## `testes/interface/acoes.test.js`
 
 | | Teste | Grupo | Duração |
 |---|---|---|---:|
-| ✅ | inspeção, seleção, Esc, tunagem, overfit, stack overflow e early stop na própria rede | ações da mesa | 67,9 s |
-| ✅ | barra de ações do NeuroDeck: botões acendem pela seleção, selo de tunagem, pontos por neurônio e painéis de leitura | ações da mesa | 30,2 s |
-| ✅ | dropout (escolher camadas e pagar), cancelar, transfer learning, passar a vez e vanishing gradient | ações da mesa | 38,1 s |
-| ✅ | truco: pedir, responder (aumentar, aceitar, correr) e a mão terminada por corrida | ações da mesa | 49,0 s |
-| ✅ | dicas: aviso de conquistas, dica de jogo a cada vez, dicas dos botões com o mouse e desligar | ações da mesa | 33,2 s |
-| ✅ | celular: segurar um botão mostra a dica sem executar a ação; toque rápido executa | ações da mesa | 19,4 s |
-| ✅ | celular em tela cheia: botão responde mesmo com o polegar apoiado na borda da tela | ações da mesa | 16,6 s |
-| ✅ | som, música, comemorações, derrota e voltar ao menu | ações da mesa | 57,0 s |
+| ✅ | inspeção, seleção, Esc, tunagem, overfit, stack overflow e early stop na própria rede | ações da mesa | 77,4 s |
+| ✅ | barra de ações do NeuroDeck: botões acendem pela seleção, selo de tunagem, pontos por neurônio e painéis de leitura | ações da mesa | 44,3 s |
+| ✅ | dropout (escolher camadas e pagar), cancelar, transfer learning, passar a vez e vanishing gradient | ações da mesa | 43,5 s |
+| ✅ | truco: pedir, responder (aumentar, aceitar, correr) e a mão terminada por corrida | ações da mesa | 64,6 s |
+| ✅ | truco com duas pessoas no aparelho: quem responde pega o aparelho antes de ver o pedido | ações da mesa | 42,6 s |
+| ✅ | dicas: aviso de conquistas, dica de jogo a cada vez, dicas dos botões com o mouse e desligar | ações da mesa | 41,9 s |
+| ✅ | celular: segurar um botão mostra a dica sem executar a ação; toque rápido executa | ações da mesa | 20,0 s |
+| ✅ | celular em tela cheia: botão responde mesmo com o polegar apoiado na borda da tela | ações da mesa | 18,3 s |
+| ✅ | som, música, comemorações, derrota e voltar ao menu | ações da mesa | 66,5 s |
 
 ## `testes/interface/menu-e-telas.test.js`
 
 | | Teste | Grupo | Duração |
 |---|---|---|---:|
-| ✅ | carrega, mostra o menu com as escolhas e abre Regras (abas, ajuda das ações), Biblioteca de conceitos, Conquistas, Mods e Sobre | menu e telas | 47,1 s |
-| ✅ | celular na vertical: só o aviso para girar; ao girar, o jogo é criado e o menu aparece | menu e telas | 36,1 s |
-| ✅ | renderizador Canvas e resolução forçados pela URL | menu e telas | 3,2 s |
+| ✅ | carrega, mostra o menu com as escolhas e abre Regras (abas, ajuda das ações), Biblioteca de conceitos, Conquistas, Mods e Sobre | menu e telas | 53,2 s |
+| ✅ | celular na vertical: só o aviso para girar; ao girar, o jogo é criado e o menu aparece | menu e telas | 39,4 s |
+| ✅ | renderizador Canvas e resolução forçados pela URL | menu e telas | 3,0 s |
+
+## `testes/interface/online.test.js`
+
+| | Teste | Grupo | Duração |
+|---|---|---|---:|
+| ✅ | criar, entrar pelo código, jogar uma mão com truco e terminar igual nas duas telas | partida online entre abas | 185,0 s |
+| ✅ | quem fecha a aba no meio da mão vira computador e a outra tela termina a mão | partida online entre abas | 130,6 s |
+| ✅ | quem fecha a aba antes de escolher a carta de quem começa vira computador e a outra tela termina a mão | partida online entre abas | 112,8 s |
 
 ## `testes/interface/partidas.test.js`
 
 | | Teste | Grupo | Duração |
 |---|---|---|---:|
-| ✅ | Zé do Ruído · clássico · neutro · revela e volta | mãos completas contra o computador | 163,0 s |
-| ✅ | Gradiente Guloso · truco · montanha · revela e descarta | mãos completas contra o computador | 94,3 s |
-| ✅ | Mestre Monte Carlo · fraternidade · pântano · sorteio | mãos completas contra o computador | 63,4 s |
-| ✅ | 4 jogadores (2 humanos e 2 Zé do Ruído), arquitetura profunda, 2 baralhos | mesa dinâmica: arquiteturas, 3 a 5 jogadores e vários baralhos | 56,8 s |
-| ✅ | 5 jogadores contra o Gradiente Guloso, arquitetura larga | mesa dinâmica: arquiteturas, 3 a 5 jogadores e vários baralhos | 77,3 s |
-| ✅ | 3 jogadores, arquitetura curta, Pântano | mesa dinâmica: arquiteturas, 3 a 5 jogadores e vários baralhos | 49,6 s |
-| ✅ | duas pessoas no mesmo aparelho (yin-yang, oceano): o aparelho troca de mãos entre as vezes | duas pessoas e mão única | 48,3 s |
-| ✅ | mão única sem truco (Power BI): "Nova partida" recomeça o placar | duas pessoas e mão única | 30,8 s |
+| ✅ | Zé do Ruído · clássico · neutro · revela e volta | mãos completas contra o computador | 145,6 s |
+| ✅ | Gradiente Guloso · truco · montanha · revela e descarta | mãos completas contra o computador | 87,2 s |
+| ✅ | Mestre Monte Carlo · fraternidade · pântano · sorteio | mãos completas contra o computador | 144,0 s |
+| ✅ | 4 jogadores (2 humanos e 2 Zé do Ruído), arquitetura profunda, 2 baralhos | mesa dinâmica: arquiteturas, 3 a 5 jogadores e vários baralhos | 131,8 s |
+| ✅ | 5 jogadores contra o Gradiente Guloso, arquitetura larga | mesa dinâmica: arquiteturas, 3 a 5 jogadores e vários baralhos | 141,9 s |
+| ✅ | 3 jogadores, arquitetura curta, Pântano | mesa dinâmica: arquiteturas, 3 a 5 jogadores e vários baralhos | 72,8 s |
+| ✅ | duas pessoas no mesmo aparelho (yin-yang, oceano): o aparelho troca de mãos entre as vezes | duas pessoas e mão única | 57,2 s |
+| ✅ | mão única sem truco (Power BI): "Nova partida" recomeça o placar | duas pessoas e mão única | 38,8 s |
 

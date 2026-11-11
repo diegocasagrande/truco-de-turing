@@ -6,7 +6,7 @@ base das regras do jogo unificado; o Truco de Turing entra com a interface.
 
 - **Origem:** https://neurodeck-fpo.web.app/js/ (arquivos servidos pelo site publicado)
 - **Cópia feita em:** 10/11/2026
-- **Autor do código original:** Francisco, com a concordância do grupo para a fusão
+- **Autor do código original:** Francisco Lima, com a concordância do grupo para a fusão
 
 ## Arquivos
 

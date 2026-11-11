@@ -290,7 +290,7 @@ describe('telas', () => {
     const texto = $('.camada').textContent;
     assert.ok(texto.includes('Versão ' + VERSAO));
     assert.match(texto, /Peng Yaohao/);
-    for (const termo of ['NeuroDeck', 'Truco de Turing', 'Francisco Lima', 'Welyngton', 'Diego Casagrande', 'neurodeck-fpo.web.app']) assert.ok(texto.includes(termo), termo);
+    for (const termo of ['NeuroDeck', 'Truco de Turing', 'Francisco Lima', 'Welyngton', 'Diego Casagrande', 'Vinícius Chiconato', 'Suzy Arcanjo', 'neurodeck-fpo.web.app']) assert.ok(texto.includes(termo), termo);
   });
   it('revisão: resumo, curva, linha do tempo comentada e placar da partida', () => {
     const mao = maoAteOFim({ terreno: 'pantano' });

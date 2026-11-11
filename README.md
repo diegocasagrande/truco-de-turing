@@ -187,7 +187,10 @@ Carregar mods na interface (o motor já tem o registro de baralhos, terrenos e a
 Distribuído sob a [GPL-3.0](https://github.com/welyngton/truco-de-turing#GPL-3.0-1-ov-file). Código-fonte: https://github.com/welyngton/truco-de-turing
 
 Autores:
-Welyngton Jose Vinicius Dal Pra
-...
+- Welyngton José Vinicius Dal Prá (Truco de Turing: interface, arte, sons, conquistas e modo truco)
+- Diego Casagrande (testes, validação das regras e fusão com o NeuroDeck)
+- Vinícius Chiconato (correções da fusão)
+- Suzy Arcanjo (verbetes das ações na Biblioteca de conceitos)
+- Francisco Lima (NeuroDeck: regras, motor, oponentes e mods)
 
 Regras originais: Peng Yaohao - FPO-UNB - 2026-2

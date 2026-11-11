@@ -96,9 +96,15 @@ export const metodosOnline = {
       Object.assign(jogador, { tipo: 'oponente', oponente: this.opcoes.oponente, nome: (acao.nome || jogador.nome) + ' (computador)' });
       mostrarAviso('Sala ' + this.online.sala.config.codigo, (acao.nome || 'Um jogador') + ' saiu; o computador joga no lugar.', null, 5000);
     }
-    /* se a mesa estava esperando justamente essa cadeira, o anfitrião assume a jogada */
+    /* se a mesa estava parada esperando justamente essa cadeira (a vez, a carta de início ou a
+       resposta ao truco), o anfitrião assume agora; nos outros casos o fluxo normal chega lá */
     this.redesenhar();
-    if (this.souAnfitriaoOnline() && this.aguardandoRede && this.mao.fase !== 'fim') this.time.delayedCall(50, () => this.avancar());
+    const mao = this.mao, pedido = this.partida.pedido;
+    const esperavaEla = mao.fase === 'inicio' || (pedido ? 1 - pedido.por === acao.cadeira : mao.vez === acao.cadeira);
+    if (this.souAnfitriaoOnline() && this.aguardandoRede && mao.fase !== 'fim' && esperavaEla) {
+      this.aguardandoRede = false;
+      this.time.delayedCall(50, () => (this.partida.pedido ? this.pedirResposta() : this.avancar()));
+    }
   },
 
   /**
@@ -109,10 +115,12 @@ export const metodosOnline = {
   avancarNoInicioOnline() {
     const mao = this.mao, eu = this.cadeiraOnline();
     this.quemVe = eu;
-    if (this.souAnfitriaoOnline() && !this.inicioDosBotsEnviado) {
-      this.inicioDosBotsEnviado = true;
+    if (this.souAnfitriaoOnline()) {
+      /* uma vez por cadeira e por mão; inclui quem caiu antes de escolher e virou computador */
       mao.jogadores.forEach((jogador, j) => {
-        if (jogador.tipo === 'oponente' && !jogador.cartaInicial) this.online.sala.enviar({ tipo: 'jogada', cadeira: j, jogada: escolherJogada(mao, j), mao: this.chaveDaMao() });
+        if (jogador.tipo !== 'oponente' || jogador.cartaInicial || this.inicioDosBotsEnviado.has(j)) return;
+        this.inicioDosBotsEnviado.add(j);
+        this.online.sala.enviar({ tipo: 'jogada', cadeira: j, jogada: escolherJogada(mao, j), mao: this.chaveDaMao() });
       });
     }
     if (mao.jogadores[eu].tipo === 'humano' && !mao.jogadores[eu].cartaInicial && this.modo !== 'inicio') {

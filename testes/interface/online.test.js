@@ -39,15 +39,31 @@ const PASSO = `
   if (cena.painel.botaoPassar.habilitado) { cena.passarAVez(); return 'passou'; }
   return 'nada';`;
 
-/** Joga nas abas até todas mostrarem o resultado. */
+/** Diagnóstico de uma aba: onde a mesa está parada. */
+const DIAGNOSTICO = `return { fase: cena.mao.fase, vez: cena.mao.vez, tipos: cena.mao.jogadores.map((j) => j.tipo), ocupada: cena.ocupada,
+  aguardandoRede: cena.aguardandoRede, fila: cena.filaOnline.map((a) => a.tipo + '@' + a.mao), entregue: app.online && app.online.sala.entregue,
+  pedido: cena.partida.pedido, modo: cena.modo, caixas: [...document.querySelectorAll('.camada h2')].map((h) => h.textContent) };`;
+
+/**
+ * Joga nas abas até todas mostrarem o resultado. A máquina dos testes pode estar lenta (as outras
+ * suítes rodam ao mesmo tempo), então o limite é de progresso: falha se nenhuma ação nova chegar
+ * por 60 s, com o diagnóstico de cada aba.
+ */
 async function jogarAteOFim(paginas, trucar = []) {
-  for (let i = 0; i < 600; i++) {
+  let ultimo = -1, desde = Date.now();
+  for (;;) {
     const estados = [];
     for (const [k, p] of paginas.entries()) estados.push(await naCena(p, PASSO, !!trucar[k]));
-    if (estados.every((e) => e === 'fim')) return i;
+    if (estados.every((e) => e === 'fim')) return;
+    const entregue = await naCena(paginas[0], 'return app.online ? app.online.sala.entregue : 0;');
+    if (entregue !== ultimo) { ultimo = entregue; desde = Date.now(); }
+    if (Date.now() - desde > 60000) {
+      const diag = [];
+      for (const p of paginas) diag.push(await naCena(p, DIAGNOSTICO));
+      throw new Error('a mão online não terminou: ' + JSON.stringify(diag));
+    }
     await paginas[0].waitForTimeout(120);
   }
-  throw new Error('a mão online não terminou');
 }
 
 /** Estado do motor visto por uma aba. */
@@ -91,7 +107,8 @@ describe('partida online entre abas', () => {
     } finally { await jogo.fechar(); }
   });
 
-  it('quem fecha a aba no meio da mão vira computador e a outra tela termina a mão', async () => {
+  for (const [nome, arg_antes] of [['no meio da mão', false], ['antes de escolher a carta de quem começa', true]]) {
+  it('quem fecha a aba ' + nome + ' vira computador e a outra tela termina a mão', async () => {
     const jogo = await abrirJogo(servidor.url, { consulta: '?res=1' });
     try {
       const a = jogo.pagina;
@@ -105,7 +122,9 @@ describe('partida online entre abas', () => {
       await a.waitForFunction(() => document.querySelectorAll('#o-cadeiras li.humano').length === 2);
       await a.click('#o-comecar');
       for (const p of [a, b.pagina]) await p.waitForFunction(() => { const c = globalThis.__TRUCO_DE_TURING__.jogo.scene.getScene('Mesa'); return c && c.mao; });
-      for (let i = 0; i < 6; i++) { await naCena(a, PASSO, false); await naCena(b.pagina, PASSO, false); await a.waitForTimeout(150); }
+      if (arg_antes) { /* cai antes de escolher a carta de quem começa */ } else {
+        for (let i = 0; i < 6; i++) { await naCena(a, PASSO, false); await naCena(b.pagina, PASSO, false); await a.waitForTimeout(150); }
+      }
       await b.pagina.close();
       /* sem sinal de vida por 12 s, a cadeira do Beto passa para o computador */
       await a.waitForFunction(() => globalThis.__TRUCO_DE_TURING__.jogo.scene.getScene('Mesa').mao.jogadores[1].tipo === 'oponente', null, { timeout: 30000 });
@@ -114,4 +133,5 @@ describe('partida online entre abas', () => {
       assert.deepEqual(jogo.erros, []);
     } finally { await jogo.fechar(); }
   });
+  }
 });

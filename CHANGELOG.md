@@ -2,21 +2,20 @@
 
 Cada merge na `main` gera uma versão nova (ver `ferramentas/versionar.js`).
 
-## Em andamento: fusão com o NeuroDeck (Etapa 1)
-
-Entra na próxima versão, quando o pull request da fusão for aceito. Plano e decisões: issues #1 a #11 do fork.
-
-- feat: motor de regras do NeuroDeck em `src/motor/`, cópia fiel do site publicado (SHA-256 de cada arquivo e 1.000 partidas com semente idênticas às do site; ver `src/motor/ORIGEM.md`). (#1)
-- fix: regras da fusão no motor: desempate pela carta mais alta compara a força da carta (K vence J); trio de figuras vale 30; a carta empilhada conta na sequência de figuras (decisão do professor; o exemplo 8-K-K-3 com um K tunado continua valendo 41); qualquer early stop libera o passar. O conjunto original segue disponível com `rules: 'nd-2.0.0'`. (#1)
-- feat: `src/nucleo` vira uma camada de tradução sobre o motor: as telas do Truco de Turing passam a jogar com as regras do NeuroDeck. Mudam para o jogador: o dropout manda os neurônios para o cemitério; rede sem neurônio livre na camada seguinte é finalizada; transfer learning não gasta a vez; só passa quem teve a rede interrompida por early stop; par de figuras vale 20; os terrenos e o baralho Truco são os do NeuroDeck (truco com 2 baralhos e mão de 10 cartas); os oponentes são os bots do NeuroDeck. O padrão de "quem começa" passa a ser revelar e descartar; revelar e devolver à mão e o sorteio continuam no menu. O modo truco não mudou. (#2)
-- test: 40 testes de regra de negócio atualizados para as regras da fusão (10 mudaram de expectativa), testes do motor (`motor-equivalencia`, `motor-regras`, `motor-inicio`), testes da camada de tradução e montagem de situações pelo estado do motor (`testes/apoio/montagem.js`). Planilha de validação refeita para a fusão (`relatorios/validacao/`): 40 testes de regra, 37 do motor e 28 cenários funcionais no jogo unificado, com as decisões de regra; relatórios das três suítes regenerados (255 de unidade, 15 de interface, 12 de performance). (#3)
+Autores do projeto: Diego Casagrande, Welyngton José Vinicius Dal Prá, Vinícius Chiconato e Suzy Arcanjo. Motor de regras do NeuroDeck: Francisco Lima. Regras originais: prof. Peng Yaohao (FPO 2026/2, PPCA/UnB).
 
 ## Em andamento: fusão com o NeuroDeck (Etapa 3)
 
+Autores: Diego Casagrande, Welyngton José Vinicius Dal Prá, Vinícius Chiconato e Suzy Arcanjo, com o motor do NeuroDeck de Francisco Lima.
+
 - feat: jogar online. A sala tem código de 5 letras, cadeiras para pessoas e computador e ações numeradas pelo anfitrião: todos os aparelhos aplicam as mesmas ações na mesma ordem e terminam com o mesmo estado. Quem cai vira computador no mesmo ponto em todas as telas, se o anfitrião sai outra pessoa assume, e quem recarrega volta à cadeira. Funciona pela internet com o Firebase do grupo (projeto `truco-e26e8`, regras em `firestore.rules`) e entre abas do mesmo navegador sem login. (#11)
 - feat: contas com Google ou e-mail e senha; conquistas, avatares e progresso ficam na conta e se juntam com os do aparelho sem contar em dobro. (#11)
+- fix: online: quem cai antes de escolher a carta de quem começa vira computador, e a mão segue (antes a mesa ficava esperando a escolha); a cadeira de quem caiu é assumida uma vez só, também no meio de um pedido de truco. (#11)
+- test: relatórios regenerados com as três etapas: 311 testes de unidade, 23 de interface (3 deles de partida online entre abas) e 12 de performance; cobertura de 98,0% das linhas.
 
 ## Em andamento: fusão com o NeuroDeck (Etapa 2)
+
+Autores: Diego Casagrande, Welyngton José Vinicius Dal Prá, Vinícius Chiconato e Suzy Arcanjo, com o motor do NeuroDeck de Francisco Lima; correções da fusão (rótulo da partida, truco com várias pessoas no aparelho, caminhos no Windows) de Vinícius Chiconato.
 
 - feat: mesa dinâmica: arquiteturas do NeuroDeck (padrão, curta, profunda, larga), de 2 a 5 jogadores com até 4 humanos no mesmo aparelho e de 1 a 3 baralhos; colunas, cartas e placar se ajustam ao tamanho da mesa. Com mais de 2 jogadores o modo truco fica desligado. (#5)
 - feat: menu com jogadores, pessoas, arquitetura e baralhos; tela de Mods com a API do NeuroDeck e um mod de exemplo; tela Sobre com o jogo unificado e os autores. (#4)
@@ -31,6 +30,17 @@ Entra na próxima versão, quando o pull request da fusão for aceito. Plano e d
 - feat: avatares do jogador: 9 retratos (truqueiros, autômato, GatoNet, coruja da validação, monge do forward pass, nobre, decifrador e antimatéria), 3 livres e 6 liberados por conquistas. Escolha em Menu > Avatar (ou em Conquistas); o retrato vai para o placar da mesa e a tela de resultado avisa quando uma conquista libera um avatar. A escolha fica salva no navegador até existirem contas. (#10)
 - feat: 8 conquistas novas, com nomes temáticos: Sangue azul (Nobreza), Forward pass de ouro (Backprop), Ajuste fino, Batch grande, Ensemble, Big data, Deep learning de verdade e Arquiteto de redes; o quadro passa a ter 35. (#10)
 - test: relatórios das três suítes regenerados para as Etapas 1 e 2 (302 de unidade, 19 de interface, 12 de performance; cobertura de 98,7% das linhas) e planilha de validação atualizada (o cenário F-28, dos textos conceituais, passou de Atenção para Passou com a revisão da #7).
+
+## Em andamento: fusão com o NeuroDeck (Etapa 1)
+
+Autores: Diego Casagrande, Welyngton José Vinicius Dal Prá, Vinícius Chiconato e Suzy Arcanjo, com o motor do NeuroDeck de Francisco Lima.
+
+Entra na próxima versão, quando o pull request da fusão for aceito. Plano e decisões: issues #1 a #11 do fork.
+
+- feat: motor de regras do NeuroDeck em `src/motor/`, cópia fiel do site publicado (SHA-256 de cada arquivo e 1.000 partidas com semente idênticas às do site; ver `src/motor/ORIGEM.md`). (#1)
+- fix: regras da fusão no motor: desempate pela carta mais alta compara a força da carta (K vence J); trio de figuras vale 30; a carta empilhada conta na sequência de figuras (decisão do professor; o exemplo 8-K-K-3 com um K tunado continua valendo 41); qualquer early stop libera o passar. O conjunto original segue disponível com `rules: 'nd-2.0.0'`. (#1)
+- feat: `src/nucleo` vira uma camada de tradução sobre o motor: as telas do Truco de Turing passam a jogar com as regras do NeuroDeck. Mudam para o jogador: o dropout manda os neurônios para o cemitério; rede sem neurônio livre na camada seguinte é finalizada; transfer learning não gasta a vez; só passa quem teve a rede interrompida por early stop; par de figuras vale 20; os terrenos e o baralho Truco são os do NeuroDeck (truco com 2 baralhos e mão de 10 cartas); os oponentes são os bots do NeuroDeck. O padrão de "quem começa" passa a ser revelar e descartar; revelar e devolver à mão e o sorteio continuam no menu. O modo truco não mudou. (#2)
+- test: 40 testes de regra de negócio atualizados para as regras da fusão (10 mudaram de expectativa), testes do motor (`motor-equivalencia`, `motor-regras`, `motor-inicio`), testes da camada de tradução e montagem de situações pelo estado do motor (`testes/apoio/montagem.js`). Planilha de validação refeita para a fusão (`relatorios/validacao/`): 40 testes de regra, 37 do motor e 28 cenários funcionais no jogo unificado, com as decisões de regra; relatórios das três suítes regenerados (255 de unidade, 15 de interface, 12 de performance). (#3)
 
 ## 1.2.1 — 2026-11-09
 
